@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
+import axios from './axios';
+import ToastNotify from './mixins/ToastNotify.vue';
 
 import { IonicVue } from '@ionic/vue';
 
@@ -20,13 +22,17 @@ import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 
-/* Theme variables */
+/* Theme variables */ 
 import './theme/variables.css';
+import './theme/core.css';
 
 const app = createApp(App)
   .use(IonicVue)
   .use(router);
   
+app.mixin(ToastNotify);
+app.config.globalProperties.$axios = axios;
+
 router.isReady().then(() => {
   app.mount('#app');
 });
