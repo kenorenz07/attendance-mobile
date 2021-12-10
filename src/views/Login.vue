@@ -135,6 +135,7 @@ ion-button {
 
 .login-btn {
     margin-left: 20px;
+    margin-top: 40px;
 }
 .login-form {
     margin-top: 100px;
