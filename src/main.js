@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router';
 import axios from './axios';
 import ToastNotify from './mixins/ToastNotify.vue';
+import Moment from './mixins/Moment.vue';
+import Abbreviation from './mixins/Abbreviation.vue';
 
 import { IonicVue } from '@ionic/vue';
 
@@ -31,6 +33,8 @@ const app = createApp(App)
   .use(router);
   
 app.mixin(ToastNotify);
+app.mixin(Moment);
+app.mixin(Abbreviation);
 app.config.globalProperties.$axios = axios;
 
 router.isReady().then(() => {
