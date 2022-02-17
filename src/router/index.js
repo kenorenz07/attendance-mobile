@@ -24,16 +24,12 @@ const routes = [
       },
       {
         path: 'class-details',
-        component: () => import('@/views/teacher_dashboard/ClassDetails.vue')
+        component: () => import('@/views/teacher_dashboard/ClassList.vue')
       },
       {
-        path: 'tab2',
-        component: () => import('@/views/teacher_dashboard/Tab2.vue')
+        path: 'class-detail/:id',
+        component: () => import('@/views/teacher_dashboard/ClassDetail.vue')
       },
-      {
-        path: 'tab3',
-        component: () => import('@/views/teacher_dashboard/Tab3.vue')
-      }
     ]
   },
   {

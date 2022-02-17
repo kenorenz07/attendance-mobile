@@ -33,8 +33,8 @@
       </ion-col>
     </ion-row>
     <ion-list>
-      <div v-if="!getting_class" >
-        <ion-item class="class-detail" :class="checkSched(class_detail.schedule) ? 'class-ongoing':'not-ongoing'" @click="viewClassDetail(class_detail)" v-for="class_detail in class_details" :key="class_detail.id">
+      <div v-if="!getting_classes" >
+        <ion-item class="class-list-item" :class="checkSched(class_detail.schedule) ? 'class-ongoing':'not-ongoing'" @click="viewClassDetail(class_detail)" v-for="class_detail in class_details" :key="class_detail.id">
           <ion-button  disabled fill="clear" slot="end" :color="checkSched(class_detail.schedule) ? 'light':'primary'">
             <ion-icon size="large" :icon="people"></ion-icon>
             <ion-badge :color="checkSched(class_detail.schedule) ? 'light':'primary'">
@@ -47,25 +47,25 @@
             </ion-text>
             <ion-text :color="checkSched(class_detail.schedule) ? 'light':'dark'">
               <h3 class="subject-text">{{class_detail.room.name}}</h3>
-              <p>{{abbrDay(class_detail.schedule.day)}} {{time_moment(class_detail.schedule.time_start)}} to {{time_moment(class_detail.schedule.time_end)}}</p>
+              <p class="subject-sched">{{abbrDay(class_detail.schedule.day)}} {{time_moment(class_detail.schedule.time_start)}} to {{time_moment(class_detail.schedule.time_end)}}</p>
             </ion-text>
           </ion-label>
         </ion-item>
       </div>
       <div v-else>
-        <ion-item class="class-detail not-ongoing" v-for="i in 7" :key="i">
+        <ion-item class="class-list-item not-ongoing" v-for="i in 7" :key="i">
           <ion-button  disabled fill="clear" slot="end" color="primary" >
             <ion-skeleton-text></ion-skeleton-text>
             <ion-skeleton-text></ion-skeleton-text>
           </ion-button>
           <ion-label>
-            <h2>
+            <h2 class="subject-text subject-title">
               <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
             </h2>
-            <h3>
+            <h3 class="subject-text">
               <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
             </h3>
-            <p>
+            <p class="subject-sched"> 
               <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
             </p>
           </ion-label>
@@ -76,11 +76,11 @@
 </template>
 
 <script >
-import { IonPage,IonList,IonItem,IonLabel,IonButton,IonIcon,IonBadge,IonSelect,IonSelectOption,IonCol,IonRow,IonSkeletonText,IonText,modalController} from '@ionic/vue';
+import { IonPage,IonList,IonItem,IonLabel,IonButton,IonIcon,IonBadge,IonSelect,IonSelectOption,IonCol,IonRow,IonSkeletonText,IonText} from '@ionic/vue';
 import { people } from 'ionicons/icons';
 import moment from 'moment';
 
-import ClassDetail from '@/components/ClassDetail.vue'
+// import ClassDetail from '@/components/ClassDetail.vue'
 
 export default  {
   name: 'ClassDetails',
@@ -102,7 +102,7 @@ export default  {
     select_options : {
       cssClass : 'select-option-filter'
     },
-    getting_class : false
+    getting_classes : false
 
   }),
   ionViewWillEnter(){
@@ -129,7 +129,7 @@ export default  {
   },
   methods : {
     initialize(){
-      this.getting_class = true
+      this.getting_classes = true
       let params = {
         subject_key: this.selected_subject == "All" ? null : this.selected_subject,
         day : this.selected_day == "All" ? null : this.selected_day
@@ -137,7 +137,7 @@ export default  {
       
       this.$axios.get('teacher/v1/class-details',{params}).then(({data}) => {
         this.class_details = data
-        this.getting_class = false
+        this.getting_classes = false
       })
     },
     getSubjects(){
@@ -145,15 +145,16 @@ export default  {
         this.subjects.push(...data)
       })
     },
-    async viewClassDetail(class_detail){
-      const modal = await modalController.create({
-        component: ClassDetail, 
-        componentProps: {
-          class_detail
-        },
-        cssClass: "class-detail-modal"
-      });
-      return modal.present();
+    viewClassDetail(class_detail){
+      this.$router.push('/teacher/class-detail/'+class_detail.id)
+    //   const modal = await modalController.create({
+    //     component: ClassDetail, 
+    //     componentProps: {
+    //       class_detail
+    //     },
+    //     cssClass: "class-detail-modal"
+    //   });
+    //   return modal.present();
     },
   }
 }
@@ -196,21 +197,6 @@ ion-select::part(text) {
   --background: var(--ion-color-light);
   --border-color: var(--ion-color-light);
   --color : var(--ion-color-dark);
-}
-
-.class-detail {
-  --min-height :100px;
-  --border-radius: 5px;
-  margin-bottom: 10px;
-}
-
-.subject-text {
-  font-weight: bold;
-  margin-bottom: 3px;
-}
-
-.subject-title {
-  margin-bottom: 5px!important;
 }
 
 ion-list {

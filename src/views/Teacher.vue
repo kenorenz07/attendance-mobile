@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header collapse="condense" class="ion-no-border">
+    <ion-header collapse="condense" class="ion-no-border" mode="ios">
       <ion-toolbar>
         <ion-button  slot="start" fill="clear" >
           <ion-avatar>

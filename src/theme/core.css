@@ -11,3 +11,23 @@
 .select-option-filter ion-radio {
     --color-checked: var(--ion-color-secondary) !important;
 }
+
+
+.class-list-item {
+    --min-height :100px;
+    --border-radius: 5px;
+    margin-bottom: 10px;
+}
+.subject-title {
+    margin-bottom: 5px!important;
+}
+.subject-text {
+    font-weight: bold!important;
+}
+.subject-sched {
+    padding-top: 5px;
+}
+.back-button {
+    height: 54px;
+}
+
