@@ -31,3 +31,7 @@
     height: 54px;
 }
 
+
+.grid-no-padding {
+    --ion-grid-column-padding : 0!important;
+}
