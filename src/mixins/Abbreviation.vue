@@ -9,15 +9,15 @@ export default {
                 case "SUNDAY" :
                     return "Su";
                 case "MONDAY" :
-                    return "M";
+                    return "Mo";
                 case "TUESDAY" :
-                    return "T";
+                    return "Tu";
                 case "WEDNESDAY" :
-                    return "W";
+                    return "We";
                 case "THURSDAY" :
                     return "Th";
                 case "FRIDAY" :
-                    return "F";
+                    return "Fr";
                 case "SATURDAY" :
                     return "Sa";
                 default :

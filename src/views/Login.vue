@@ -17,17 +17,16 @@
                     <ion-row>
                         <ion-col align-self-center>
                             <div class="ion-text-center ion-margin login-form">
-                                <ion-item color="transparent">
-                                    <ion-label color="primary">User. :</ion-label>
-                                    <ion-input color="primary" v-model="user.username" type="text"></ion-input>
-                                    <ion-icon color="primary" :icon="person" slot="end"></ion-icon>
+                                <ion-item color="transparent" lines="none" class="login-input">
+                                    <ion-input class="input-text" color="primary" placeholder="User" v-model="user.username" type="text"></ion-input>
+                                    <ion-icon color="primary" :icon="person" slot="start"></ion-icon>
                                 </ion-item>
-                                <ion-item color="transparent">
-                                    <ion-label color="primary">Pass. :</ion-label>
-                                    <ion-input color="primary" v-model="user.password" :type="show_pass ?'text' :'password'" ></ion-input>
+                                <ion-item color="transparent" lines="none" class="login-input ion-margin-top">
+                                    <ion-icon color="primary" :icon="lockClosedOutline" slot="start"></ion-icon>
+                                    <ion-input class="input-text" color="primary" placeholder="Password" v-model="user.password" :type="show_pass ?'text' :'password'" ></ion-input>
                                     <ion-icon color="primary" :icon="!show_pass ? eye : eyeOff" slot="end" @click="show_pass = !show_pass"></ion-icon>
                                 </ion-item>
-                                <ion-button class="login-btn ion-margin-top" @click="loginUser()" expand="block">Login</ion-button>
+                                <ion-button class="login-btn" @click="loginUser()" expand="block" >Login</ion-button>
                                 <ion-spinner v-if="loading" class="loading-spinner" color="tertiary"></ion-spinner>
                             </div>
                         </ion-col>
@@ -38,19 +37,19 @@
     </ion-page>
 </template>
 <script>
-import { IonPage,IonContent, IonGrid,IonRow,IonCol,IonImg,IonButton,IonItem,IonInput,IonIcon,IonText,IonSpinner,IonLabel } from '@ionic/vue'
-import { person ,eye,eyeOff} from 'ionicons/icons';
+import { IonPage,IonContent, IonGrid,IonRow,IonCol,IonImg,IonButton,IonItem,IonInput,IonIcon,IonText,IonSpinner } from '@ionic/vue'
+import { person ,eye,eyeOff,lockClosedOutline} from 'ionicons/icons';
 
 export default {
     components : {
-        IonPage,IonContent, IonGrid,IonRow,IonCol,IonImg,IonButton,IonItem,IonInput,IonIcon,IonText,IonSpinner,IonLabel
+        IonPage,IonContent, IonGrid,IonRow,IonCol,IonImg,IonButton,IonItem,IonInput,IonIcon,IonText,IonSpinner
     },
     mounted () {
     },
     data : () => ({
         person,
         eye,
-        eyeOff,
+        eyeOff,lockClosedOutline,
         show_pass: false,
         loading: false,
         user: {
@@ -90,7 +89,7 @@ export default {
     }
 }
 </script>
-<style scoped type="scss">
+<style scoped>
 ion-content ion-grid {
     height: 100%;
     justify-content: center;
@@ -134,8 +133,9 @@ ion-button {
 }
 
 .login-btn {
-    margin-left: 20px;
     margin-top: 40px;
+    --border-radius: 5px;
+    margin-left:0;
 }
 .login-form {
     margin-top: 100px;
@@ -143,5 +143,13 @@ ion-button {
 .loading-spinner {
     margin-top: 13px;
     margin-left: 21px;
+}
+.login-input {
+    border: 1px solid #CFCFCF;
+    border-radius: 5px;
+    
+}
+.input-text {
+    border: 0;
 }
 </style>

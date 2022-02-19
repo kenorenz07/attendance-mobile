@@ -70,7 +70,7 @@
                     <ion-col class="grid-no-padding">
                         <ion-label>
                         <div class="ion-text-end">
-                            <h6 >(02/22/2222)</h6>
+                            <h6 >({{selected_day}})</h6>
                         </div>
                         </ion-label>
                     </ion-col>
@@ -169,42 +169,73 @@
                     </ion-row>
                </ion-grid>
           </ion-item>
-        
+        <ion-item>
+               <ion-grid class="ion-no-padding">
+                    <ion-row class="ion-justify-content-around">
+                        <ion-col size=4 class="ion-no-padding"><ion-label class="student-name">Debal Iktad</ion-label></ion-col>
+                        <ion-col size=4 class="ion-no-padding ion-text-center"><ion-label class="attendance-status" color="danger">absent</ion-label></ion-col>
+                        <ion-col size=4 class="ion-no-padding">
+                            <ion-row class="ion-no-padding ion-justify-content-end">
+                                <ion-col size=4 class="ion-no-padding">
+                                    <ion-img src="/assets/img/edit_button.png" class="action-btn"></ion-img>
+                                </ion-col>
+                                <ion-col size=4 class="ion-no-padding">
+                                    <ion-img src="/assets/img/delete_btn.png" class="action-btn"></ion-img>
+                                </ion-col>
+                            </ion-row>
+                        </ion-col>
+                    </ion-row>
+               </ion-grid>
+          </ion-item>
         </ion-list>
     </ion-page>
 </template>
 
 <script>
-import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail} from '@ionic/vue';
+import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonSelect,IonSelectOption,IonImg,IonGrid,IonItem,IonList} from '@ionic/vue';
 import {  caretBackOutline,addCircleOutline,pencilOutline,trashOutline} from 'ionicons/icons';
 
 export default {
     components : {
-        IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail
+        IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonSelect,IonSelectOption,IonImg,IonGrid,IonItem,IonList
     },
     data : () => ({
         caretBackOutline,addCircleOutline,pencilOutline,trashOutline,
         class_detail : {},
         getting_class : true,
-        days : ['All','SUNDAY', 'MONDAY', 'TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'],
-        selected_day : 'All',
-
+        days : [],
+        selected_day : '',
+        select_options : {
+            cssClass : 'select-option-filter'
+        },
     }),
     ionViewWillEnter() {
         this.initialize()
     },
     mounted () {
         this.initialize()
+        this.getDaysFilter()
     },
     methods : {
         initialize(){
-            console.log('gaga')
             this.getting_class = true
             this.$axios.get('teacher/v1/class-detail/'+this.$route.params.id).then(({data}) => {
                 this.class_detail = data
                 this.getting_class = false
             })
-        }
+        },
+        getDaysFilter(){
+            this.$axios.get('teacher/v1/class-detail/'+this.$route.params.id+'/get-days-filter').then(({data}) => {
+                this.days = data
+                this.selected_day = this.dateFromDay(this.class_detail.schedule.day.toUpperCase())
+            })
+        },
+        getAttendances(){
+            
+            this.$axios.get('teacher/v1/class-detail/'+this.$route.params.id+'/get-attendances').then(({data}) => {
+                this.attendances = data
+            })
+        },
     }
 }
 </script>
@@ -243,6 +274,11 @@ export default {
     .action-btn {
         width: 28px;
         height: 28px;
+    }
+    ion-list {
+        height: 32vh;
+        overflow: hidden;
+        overflow-y: scroll;
     }
   
 </style>
