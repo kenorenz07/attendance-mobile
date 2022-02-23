@@ -30,6 +30,10 @@ const routes = [
         path: 'class-detail/:id',
         component: () => import('@/views/teacher_dashboard/ClassDetail.vue')
       },
+      {
+        path: 'notifications/',
+        component: () => import('@/views/teacher_dashboard/Notification.vue')
+      },
     ]
   },
   {

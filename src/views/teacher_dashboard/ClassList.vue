@@ -80,8 +80,6 @@ import { IonPage,IonList,IonItem,IonLabel,IonButton,IonIcon,IonBadge,IonSelect,I
 import { people } from 'ionicons/icons';
 import moment from 'moment';
 
-// import ClassDetail from '@/components/ClassDetail.vue'
-
 export default  {
   name: 'ClassDetails',
   components: { 
@@ -147,14 +145,7 @@ export default  {
     },
     viewClassDetail(class_detail){
       this.$router.push('/teacher/class-detail/'+class_detail.id)
-    //   const modal = await modalController.create({
-    //     component: ClassDetail, 
-    //     componentProps: {
-    //       class_detail
-    //     },
-    //     cssClass: "class-detail-modal"
-    //   });
-    //   return modal.present();
+  
     },
   }
 }

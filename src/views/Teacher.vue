@@ -55,7 +55,7 @@ export default {
   }
 }
 </script>
-<style scoped type="scss">
+<style scoped lang="scss">
 ion-tab-bar {
   bottom: 10px;
   position: relative;

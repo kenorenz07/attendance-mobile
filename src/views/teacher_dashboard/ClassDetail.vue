@@ -48,8 +48,8 @@
             <ion-col size=12 class="ion-margin-top ion-margin-bottom">
                 <ion-row>
                     <ion-col size=6 class="grid-no-padding">
-                        <ion-button expand="block" class="add-button">
-                            <ion-icon color="light" :icon="addCircleOutline"></ion-icon>
+                        <ion-button expand="block" class="add-button" @click="addStudentModal()">
+                            <ion-icon color="light" :icon="addCircleOutline" ></ion-icon>
                             Add Student
                         </ion-button>
                     </ion-col>
@@ -79,18 +79,18 @@
         </ion-row>
         <ion-list>
             <div v-if="!getting_attendance">
-                <ion-item v-for="attendance in attendances" :key="attendance.id">
+                <ion-item v-for="student_attendance in attendances" :key="student_attendance.id">
                     <ion-grid class="ion-no-padding">
                             <ion-row class="ion-justify-content-around">
-                                <ion-col size=4 class="ion-no-padding"><ion-label class="student-name">{{attendance.student.display_name_mobile}}</ion-label></ion-col>
-                                <ion-col size=4 class="ion-no-padding ion-text-center"><ion-label class="attendance-status" :color="checkColorForRemark(attendance.attendance.remarks)">{{checkRemarkValue(attendance.attendance.remarks)}}</ion-label></ion-col>
+                                <ion-col size=4 class="ion-no-padding"><ion-label class="student-name">{{student_attendance.student.display_name_mobile}}</ion-label></ion-col>
+                                <ion-col size=4 class="ion-no-padding ion-text-center"><ion-label class="attendance-status" :color="checkColorForRemark(student_attendance.attendance.remarks)">{{checkRemarkValue(student_attendance.attendance.remarks)}}</ion-label></ion-col>
                                 <ion-col size=4 class="ion-no-padding">
                                     <ion-row class="ion-no-padding ion-justify-content-end">
                                         <ion-col size=4 class="ion-no-padding">
-                                            <ion-img src="/assets/img/edit_button.png" class="action-btn"></ion-img>
+                                            <ion-img src="/assets/img/edit_button.png" @click="updateStatusForStudentAttendance(student_attendance)" class="action-btn"></ion-img>
                                         </ion-col>
                                         <ion-col size=4 class="ion-no-padding">
-                                            <ion-img src="/assets/img/delete_btn.png" class="action-btn"></ion-img>
+                                            <ion-img src="/assets/img/delete_btn.png" @click="removeStudentFromClass(student_attendance)" class="action-btn"></ion-img>
                                         </ion-col>
                                     </ion-row>
                                 </ion-col>
@@ -132,12 +132,13 @@
 </template>
 
 <script>
-import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonSelect,IonSelectOption,IonImg,IonGrid,IonItem,IonList} from '@ionic/vue';
+import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonSelect,IonSelectOption,IonImg,IonGrid,IonItem,IonList,alertController,modalController} from '@ionic/vue';
 import {  caretBackOutline,addCircleOutline,pencilOutline,trashOutline} from 'ionicons/icons';
+import ClassDetail from '@/components/ClassDetail.vue'
 
 export default {
     components : {
-        IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonSelect,IonSelectOption,IonImg,IonGrid,IonItem,IonList
+        IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonSelect,IonSelectOption,IonImg,IonGrid,IonItem,IonList,
     },
     data : () => ({
         caretBackOutline,addCircleOutline,pencilOutline,trashOutline,
@@ -149,14 +150,14 @@ export default {
             cssClass : 'select-option-filter'
         },
         attendances :[],
-        getting_attendance :false
+        getting_attendance :false,
+        available_students : []
     }),
     ionViewWillEnter() {
         this.initialize()
     },
     mounted () {
         this.initialize()
-        this.getDaysFilter()
     },
     watch : {
         selected_day : {
@@ -175,6 +176,8 @@ export default {
                 this.class_detail = data
                 this.getting_class = false
             })
+
+            this.getDaysFilter()
         },
         getDaysFilter(){
             this.$axios.get('teacher/v1/class-detail/'+this.$route.params.id+'/get-days-filter').then(({data}) => {
@@ -219,11 +222,98 @@ export default {
                 case 2 :
                     return 'warning';
                 case 3:
-                    return 'info';
+                    return 'tertiary';
                 default :
                     break;
             }
+        },
+        async removeStudentFromClass(student_attendance) {
+            const alert = await alertController.create({
+                cssClass: 'remove-student-alert',
+                mode: "md",
+                header: 'Confirm Remove',
+                message: `Do you want to remove student ${student_attendance.student.full_name} ?`,
+                    buttons: [
+                    {
+                        text: 'Yes',
+                        role: 'yes',
+                        handler: () => {
+                            this.$axios.delete(`teacher/v1/class-detail/student/${student_attendance.id}/remove-student`).then(({data}) => {
+                                data
+                                this.getAttendances()
+                            })
+                        },
+                    },
+                    {
+                        text: 'No',
+                        handler: () => {
+                            // alert.dismiss();
+                        },
+                    },
+                ],
+            });
+            return alert.present();
+        },
+        async updateStatusForStudentAttendance(student_attendance) {
+            const alert = await alertController.create({
+                cssClass: 'update-student-attendance-remark-alert ',
+                header: 'Update Status',
+                mode: "md",
+                message: `Update attendance remark for ${student_attendance.student.full_name} ?`,
+                    buttons: [
+                    {
+                        text: 'Present',
+                        handler: () => {
+                            this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 1}).then(({data}) => {
+                                data
+                                this.getAttendances()
+                            })
+                        },
+                    },
+                    {
+                        text: 'Late',
+                        handler: () => {
+                            this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 2}).then(({data}) => {
+                                data
+                                this.getAttendances()
+                            })
+                        },
+                    },
+                      {
+                        text: 'Excuse',
+                        handler: () => {
+                            this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 3}).then(({data}) => {
+                                data
+                                this.getAttendances()
+                            })
+                        },
+                    },
+                    {
+                        text: 'Absent',
+                        handler: () => {
+                            this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 0}).then(({data}) => {
+                                data
+                                this.getAttendances()
+                            })
+                            alert.dismiss();
+                        },
+                    },
+                ],
+            });
+            return alert.present();
+        },
+        async addStudentModal(){
+            console.log('sgs')
+            const modal = await modalController.create({
+                component: ClassDetail, 
+                componentProps: {
+                    class_id : this.$route.params.id
+                },
+                cssClass: "add-student-modal"
+            });
+            return modal.present();
         }
+
     }
 }
 </script>
@@ -267,9 +357,99 @@ export default {
         filter: brightness(44%);
     }
     ion-list {
-        height: 32vh;
+        height: 37%;
         overflow: hidden;
         overflow-y: scroll;
     }
   
+</style>
+<style lang="scss" >
+
+    .remove-student-alert {
+        .alert-wrapper {
+            border-radius: 5px;
+            .alert-head {
+                background: var(--ion-color-primary);
+                margin-bottom : 12px;
+                .alert-title {
+                    text-align: center;
+                    color : var(--ion-color-light);
+                }
+            }
+            .alert-button-group {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+                button {
+                    border: 1px solid var(--ion-color-primary);
+                    width: 45%;
+                    border-radius: 6px;
+                    &:first-child {
+                        background: var(--ion-color-success);
+                        color: white;
+                        border: 1px solid var(--ion-color-success);
+                    }
+                    &:last-child {
+                        background: var(--ion-color-danger);
+                        color: white;
+                        border: 1px solid var(--ion-color-danger);
+                    }
+                    span {
+                        display: flex;
+                        justify-content: center;
+                    }
+                }
+            }
+        }
+    }
+    .update-student-attendance-remark-alert {
+        .alert-wrapper {
+            border-radius: 5px;
+            .alert-head {
+                background: var(--ion-color-primary);
+                margin-bottom : 12px;
+                .alert-title {
+                    text-align: center;
+                    color : var(--ion-color-light);
+                }
+            }
+            .alert-button-group {
+                display: flex;
+                justify-content: center;
+                flex-direction: row;
+                width: 100%;
+                button {
+                    border: 1px solid var(--ion-color-primary);
+                    width: 21%;
+                    border-radius: 6px;
+                    &:first-child {
+                        background: var(--ion-color-success);
+                        color: white;
+                        border: 1px solid var(--ion-color-success);
+                    }
+                    &:nth-child(2) {
+                        background: var(--ion-color-warning);
+                        color: white;
+                        border: 1px solid var(--ion-color-warning);
+                    }
+                    &:nth-child(3) {
+                        background: var(--ion-color-tertiary);
+                        color: white;
+                        border: 1px solid var(--ion-color-tertiary);
+                    }
+                    &:last-child {
+                        background: var(--ion-color-danger);
+                        color: white;
+                        border: 1px solid var(--ion-color-danger);
+                    }
+                    span {
+                        display: flex;
+                        font-size: 11px;
+                        font-weight: bold;
+                        justify-content: center;
+                    }
+                }
+            }
+        }
+    }
 </style>
