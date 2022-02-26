@@ -10,9 +10,9 @@
         <ion-title>
           <ion-img class="logo-at" src="/assets/img/lenzy_logo_small.png"/>
         </ion-title>
-        <ion-button  slot="end" fill="clear" >
-          <ion-icon size="large"  :icon="notificationsOutline"></ion-icon>
-          <ion-badge color="primary">2</ion-badge>
+        <ion-button  slot="end" fill="clear" class="notification-btn" @click="$router.push('/teacher/notifications')">
+          <ion-icon size="large"  :icon="notifications"></ion-icon>
+          <ion-badge slot="start" color="danger">2</ion-badge>
         </ion-button>
       </ion-toolbar>
     </ion-header>
@@ -42,7 +42,7 @@
 
 <script >
 import { IonAvatar,IonButton,IonBadge,IonHeader,IonToolbar,IonContent, IonIcon, IonPage,IonImg,IonTitle, IonRouterOutlet } from '@ionic/vue';
-import { ellipse, square, book,notificationsOutline } from 'ionicons/icons';
+import { ellipse, square, book,notifications } from 'ionicons/icons';
 
 export default {
   components: { IonAvatar,IonButton,IonBadge,IonHeader,IonToolbar,IonContent,IonIcon, IonPage,IonImg,IonTitle, IonRouterOutlet },
@@ -50,7 +50,7 @@ export default {
     return {
       ellipse, 
       square, 
-      book,notificationsOutline
+      book,notifications
     }
   }
 }
@@ -89,4 +89,16 @@ ion-tab-button.tab-selected::before {
 /* .notification-icon {
   font-size
 } */
+.notification-btn {
+  position: relative;
+
+  ion-badge {
+    position: absolute;
+    top: 10px;
+    z-index: 1;
+    left: -5px;
+    font-size: 10px;
+    border-radius: 70%;
+  }
+}
 </style>

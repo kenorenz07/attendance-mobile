@@ -32,7 +32,7 @@ const routes = [
       },
       {
         path: 'notifications/',
-        component: () => import('@/views/teacher_dashboard/Notification.vue')
+        component: () => import('@/views/teacher_dashboard/Notifications.vue')
       },
     ]
   },

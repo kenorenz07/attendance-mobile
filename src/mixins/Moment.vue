@@ -11,7 +11,7 @@ export default {
         checkSched(schedule) {
             if(schedule.day == moment().format('dddd').toUpperCase()){
                 let today = moment()
-                return today.valueOf() > moment(schedule.time_start, "HH:mm:ss").valueOf() && today.valueOf() < moment(schedule.time_end, "HH:mm:ss").valueOf()
+                return today.valueOf() >= moment(schedule.time_start, "HH:mm:ss").valueOf() && today.valueOf() <= moment(schedule.time_end, "HH:mm:ss").valueOf()
             }
             return false;
         },
