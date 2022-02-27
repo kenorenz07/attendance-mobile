@@ -175,9 +175,9 @@ export default {
             this.$axios.get('teacher/v1/class-detail/'+this.$route.params.id).then(({data}) => {
                 this.class_detail = data
                 this.getting_class = false
+                this.getDaysFilter()
             })
 
-            this.getDaysFilter()
         },
         getDaysFilter(){
             this.$axios.get('teacher/v1/class-detail/'+this.$route.params.id+'/get-days-filter').then(({data}) => {

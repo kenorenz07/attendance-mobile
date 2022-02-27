@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header collapse="condense" class="ion-no-border" mode="ios">
       <ion-toolbar>
-        <ion-button  slot="start" fill="clear" >
+        <ion-button  slot="start" fill="clear" @click="openMenu()">
           <ion-avatar>
             <img src="https://www.simplelyst.com/_image-uploads/profile_photo-agents-agent-2-87173.jpg" />
           </ion-avatar>
@@ -41,7 +41,7 @@
 </template>
 
 <script >
-import { IonAvatar,IonButton,IonBadge,IonHeader,IonToolbar,IonContent, IonIcon, IonPage,IonImg,IonTitle, IonRouterOutlet } from '@ionic/vue';
+import { IonAvatar,IonButton,IonBadge,IonHeader,IonToolbar,IonContent, IonIcon, IonPage,IonImg,IonTitle, IonRouterOutlet,menuController } from '@ionic/vue';
 import { ellipse, square, book,notifications } from 'ionicons/icons';
 
 export default {
@@ -52,6 +52,11 @@ export default {
       square, 
       book,notifications
     }
+  },
+  methods : {
+    openMenu(){
+      menuController.open('teacher');
+    },
   }
 }
 </script>

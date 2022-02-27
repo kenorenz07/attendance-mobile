@@ -1,31 +1,31 @@
 <template>
     <ion-page class="pages">
-        <ion-row class="class-details">
+        <ion-row class="notification-details">
             <ion-col size=12> 
                  <ion-button class="back-button" @click="$router.back()">
                     <ion-icon color="light" :icon="caretBackOutline"></ion-icon>
                 </ion-button>
             </ion-col>
             <ion-col size=12>
-                <h1 class="class-title"><strong> Notifications </strong></h1>
+                <h1 class="notification-title"><strong> Notifications </strong></h1>
             </ion-col>
         </ion-row>
         <ion-list>
-            <div v-if="false">
-                <ion-item class="class-list-item" :class="true ? 'class-ongoing':'not-ongoing'" @click="viewClassDetail(class_detail)" v-for="class_detail in class_details" :key="class_detail.id">
+            <div v-if="true">
+                <ion-item class="notification-list-item" :class="class_detail% 2 ? 'notification-not-read':'notification-read'"  v-for="class_detail in 9" :key="class_detail">
                     <ion-label>
-                        <ion-text :color="true ? 'light':'primary'">
-                            <h2 class="subject-text subject-title" >{{class_detail.subject.name}}</h2>
+                        <ion-text :color="class_detail% 2 ? 'light':'primary'">
+                            <h2 class="subject-text subject-title" >LATE</h2>
                         </ion-text>
-                        <ion-text :color="true ? 'light':'dark'">
-                            <h3 class="subject-text">{{class_detail.room.name}}</h3>
-                            <p class="subject-sched">{{abbrDay(class_detail.schedule.day)}} {{time_moment(class_detail.schedule.time_start)}} to {{time_moment(class_detail.schedule.time_end)}}</p>
+                        <ion-text :color="class_detail% 2 ? 'light':'dark'">
+                            <h3 class="subject-text">Differential Equations</h3>
+                            <p class="subject-sched">Su 12:01 am to 01:30 am</p>
                         </ion-text>
                     </ion-label>
                 </ion-item>
             </div>
             <div v-else>
-                <ion-item class="class-list-item not-ongoing" v-for="i in 7" :key="i">
+                <ion-item class="notification-list-item notification-read" v-for="i in 7" :key="i">
                     <ion-label>
                         <h2 class="subject-text subject-title">
                         <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
@@ -88,25 +88,25 @@ export default {
 </script>
 
 <style scoped>
-    .class-details{
+    .notification-details{
         margin-top :30px;
     }
-    .class-title {
+    .notification-title {
         margin-top :15px;
         color : #120055;
     }
-    .class-list-item {
+    .notification-list-item {
         --min-height :100px;
         --border-radius: 5px;
         margin-bottom: 10px;
     }
-    .class-ongoing {
+    .notification-not-read {
         --background: var(--ion-color-secondary);
         --border-color: var(--ion-color-secondary);
         --color : var(--ion-color-light);
     }
 
-    .not-ongoing {
+    .notification-read {
         --background: var(--ion-color-light);
         --border-color: var(--ion-color-light);
         --color : var(--ion-color-dark);
