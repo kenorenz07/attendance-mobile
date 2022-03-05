@@ -40,7 +40,7 @@ export default {
       menuController.close('teacher');
     //   this.$router.push(url);
     },
-
+  
   }
 };
 </script>

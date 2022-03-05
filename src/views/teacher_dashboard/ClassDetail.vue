@@ -7,7 +7,7 @@
                 </ion-button>
             </ion-col>
             <ion-col size=12>
-                <h1 class="class-title"><strong> Class Details </strong></h1>
+                <h1 class="class-title"><strong> Class #{{class_detail.id}} </strong></h1>
             </ion-col>
             <ion-col size=9 >
                 <ion-label v-if="!getting_class">
@@ -45,34 +45,23 @@
                 </ion-thumbnail>
             </ion-col>
 
-            <ion-col size=12 class="ion-margin-top ion-margin-bottom">
+            <ion-col size=12 class="ion-margin-top">
                 <ion-row>
-                    <ion-col size=6 class="grid-no-padding">
+                    <!-- <ion-col size=6 class="grid-no-padding">
                         <ion-button expand="block" class="add-button" @click="addStudentModal()">
                             <ion-icon color="light" :icon="addCircleOutline" ></ion-icon>
                             Add Student
                         </ion-button>
+                    </ion-col> -->
+                    <ion-col class="grid-no-padding" size=6>
+                        <ion-label>
+                            <h2 class="attendance-text"><strong> Attendance </strong></h2>
+                        </ion-label>
                     </ion-col>
                     <ion-col size=6 >
                         <ion-select :interface-options="select_options" :selected-text="selected_day" :value="selected_day" @ionChange="selected_day = $event.target.value" interface="popover" class="selection-filter">
                             <ion-select-option v-for="day in days" :key="day" :value="day">{{day}}</ion-select-option>
                         </ion-select>
-                    </ion-col>
-                </ion-row>
-            </ion-col>
-            <ion-col size=12 >
-                <ion-row class="ion-justify-content-between ">
-                    <ion-col class="grid-no-padding">
-                        <ion-label>
-                            <h2 ><strong> Attendance </strong></h2>
-                        </ion-label>
-                    </ion-col>
-                    <ion-col class="grid-no-padding">
-                        <ion-label>
-                        <div class="ion-text-end">
-                            <h6 >({{selected_day}})</h6>
-                        </div>
-                        </ion-label>
                     </ion-col>
                 </ion-row>
             </ion-col>
@@ -87,10 +76,7 @@
                                 <ion-col size=4 class="ion-no-padding">
                                     <ion-row class="ion-no-padding ion-justify-content-end">
                                         <ion-col size=4 class="ion-no-padding">
-                                            <ion-img src="/assets/img/edit_button.png" @click="updateStatusForStudentAttendance(student_attendance)" class="action-btn"></ion-img>
-                                        </ion-col>
-                                        <ion-col size=4 class="ion-no-padding">
-                                            <ion-img src="/assets/img/delete_btn.png" @click="removeStudentFromClass(student_attendance)" class="action-btn"></ion-img>
+                                            <ion-img src="/assets/img/eye_btn.png" @click="seeAttendanceDetails(student_attendance)" class="action-btn"></ion-img>
                                         </ion-col>
                                     </ion-row>
                                 </ion-col>
@@ -116,10 +102,7 @@
                                 <ion-col size=4 class="ion-no-padding">
                                     <ion-row class="ion-no-padding ion-justify-content-end">
                                         <ion-col size=4 class="ion-no-padding">
-                                            <ion-img src="/assets/img/edit_button.png" class="action-btn dark"></ion-img>
-                                        </ion-col>
-                                        <ion-col size=4 class="ion-no-padding">
-                                            <ion-img src="/assets/img/delete_btn.png" class="action-btn dark"></ion-img>
+                                            <ion-img src="/assets/img/eye_btn.png" class="action-btn dark"></ion-img>
                                         </ion-col>
                                     </ion-row>
                                 </ion-col>
@@ -132,9 +115,10 @@
 </template>
 
 <script>
-import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonSelect,IonSelectOption,IonImg,IonGrid,IonItem,IonList,alertController,modalController} from '@ionic/vue';
+import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonSelect,IonSelectOption,IonImg,IonGrid,IonItem,IonList,modalController} from '@ionic/vue';
 import {  caretBackOutline,addCircleOutline,pencilOutline,trashOutline} from 'ionicons/icons';
-import ClassDetail from '@/components/ClassDetail.vue'
+// import ClassDetail from '@/components/ClassDetail.vue'
+import AttendanceDetail from '@/components/AttendanceDetail.vue'
 
 export default {
     components : {
@@ -227,92 +211,102 @@ export default {
                     break;
             }
         },
-        async removeStudentFromClass(student_attendance) {
-            const alert = await alertController.create({
-                cssClass: 'remove-student-alert',
-                mode: "md",
-                header: 'Confirm Remove',
-                message: `Do you want to remove student ${student_attendance.student.full_name} ?`,
-                    buttons: [
-                    {
-                        text: 'Yes',
-                        role: 'yes',
-                        handler: () => {
-                            this.$axios.delete(`teacher/v1/class-detail/student/${student_attendance.id}/remove-student`).then(({data}) => {
-                                data
-                                this.getAttendances()
-                            })
-                        },
-                    },
-                    {
-                        text: 'No',
-                        handler: () => {
-                            // alert.dismiss();
-                        },
-                    },
-                ],
-            });
-            return alert.present();
-        },
-        async updateStatusForStudentAttendance(student_attendance) {
-            const alert = await alertController.create({
-                cssClass: 'update-student-attendance-remark-alert ',
-                header: 'Update Status',
-                mode: "md",
-                message: `Update attendance remark for ${student_attendance.student.full_name} ?`,
-                    buttons: [
-                    {
-                        text: 'Present',
-                        handler: () => {
-                            this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 1}).then(({data}) => {
-                                data
-                                this.getAttendances()
-                            })
-                        },
-                    },
-                    {
-                        text: 'Late',
-                        handler: () => {
-                            this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 2}).then(({data}) => {
-                                data
-                                this.getAttendances()
-                            })
-                        },
-                    },
-                      {
-                        text: 'Excuse',
-                        handler: () => {
-                            this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 3}).then(({data}) => {
-                                data
-                                this.getAttendances()
-                            })
-                        },
-                    },
-                    {
-                        text: 'Absent',
-                        handler: () => {
-                            this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 0}).then(({data}) => {
-                                data
-                                this.getAttendances()
-                            })
-                            alert.dismiss();
-                        },
-                    },
-                ],
-            });
-            return alert.present();
-        },
-        async addStudentModal(){
-            console.log('sgs')
+        async seeAttendanceDetails(class_student){
             const modal = await modalController.create({
-                component: ClassDetail, 
+                component: AttendanceDetail, 
                 componentProps: {
-                    class_id : this.$route.params.id
+                    class_student : class_student
                 },
-                cssClass: "add-student-modal"
+                cssClass: "class-attendance-modal"
             });
             return modal.present();
         }
+        // async removeStudentFromClass(student_attendance) {
+        //     const alert = await alertController.create({
+        //         cssClass: 'remove-student-alert',
+        //         mode: "md",
+        //         header: 'Confirm Remove',
+        //         message: `Do you want to remove student ${student_attendance.student.full_name} ?`,
+        //             buttons: [
+        //             {
+        //                 text: 'Yes',
+        //                 role: 'yes',
+        //                 handler: () => {
+        //                     this.$axios.delete(`teacher/v1/class-detail/student/${student_attendance.id}/remove-student`).then(({data}) => {
+        //                         data
+        //                         this.getAttendances()
+        //                     })
+        //                 },
+        //             },
+        //             {
+        //                 text: 'No',
+        //                 handler: () => {
+        //                     // alert.dismiss();
+        //                 },
+        //             },
+        //         ],
+        //     });
+        //     return alert.present();
+        // },
+        // async updateStatusForStudentAttendance(student_attendance) {
+        //     const alert = await alertController.create({
+        //         cssClass: 'update-student-attendance-remark-alert ',
+        //         header: 'Update Status',
+        //         mode: "md",
+        //         message: `Update attendance remark for ${student_attendance.student.full_name} ?`,
+        //             buttons: [
+        //             {
+        //                 text: 'Present',
+        //                 handler: () => {
+        //                     this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 1}).then(({data}) => {
+        //                         data
+        //                         this.getAttendances()
+        //                     })
+        //                 },
+        //             },
+        //             {
+        //                 text: 'Late',
+        //                 handler: () => {
+        //                     this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 2}).then(({data}) => {
+        //                         data
+        //                         this.getAttendances()
+        //                     })
+        //                 },
+        //             },
+        //               {
+        //                 text: 'Excuse',
+        //                 handler: () => {
+        //                     this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 3}).then(({data}) => {
+        //                         data
+        //                         this.getAttendances()
+        //                     })
+        //                 },
+        //             },
+        //             {
+        //                 text: 'Absent',
+        //                 handler: () => {
+        //                     this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 0}).then(({data}) => {
+        //                         data
+        //                         this.getAttendances()
+        //                     })
+        //                     alert.dismiss();
+        //                 },
+        //             },
+        //         ],
+        //     });
+        //     return alert.present();
+        // },
+        // async addStudentModal(){
+        //     console.log('sgs')
+        //     const modal = await modalController.create({
+        //         component: ClassDetail, 
+        //         componentProps: {
+        //             class_id : this.$route.params.id
+        //         },
+        //         cssClass: "add-student-modal"
+        //     });
+        //     return modal.present();
+        // }
 
     }
 }
@@ -336,7 +330,7 @@ export default {
     .selection-filter {
         border: 1px solid #CFCFCF;
         border-radius: 10px;
-        height: 44px;
+        height: 30px;
     }
     .add-button {
         height: 44px;
@@ -357,11 +351,13 @@ export default {
         filter: brightness(44%);
     }
     ion-list {
-        height: 37%;
+        height: 45%;
         overflow: hidden;
         overflow-y: scroll;
     }
-  
+    .attendance-text {
+        padding-top: 10px;
+    }
 </style>
 <style lang="scss" >
 
