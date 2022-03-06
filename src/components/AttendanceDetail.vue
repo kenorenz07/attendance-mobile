@@ -41,14 +41,14 @@
 
 <script>
 import { 
-    IonRow,IonCol,IonPage,
+    IonRow,IonCol,IonPage,IonText,IonLabel,
   modalController,
 } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 
 export default {
   components: { 
-      IonRow,IonCol,IonPage,
+      IonRow,IonCol,IonPage,IonText,IonLabel,
   },
   props: {
     class_student : {

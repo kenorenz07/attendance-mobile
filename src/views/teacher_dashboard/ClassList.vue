@@ -1,5 +1,14 @@
 <template>
+
   <ion-page class="pages">
+    <ion-refresher slot="fixed" @ionRefresh="initialize($event)" >
+      <ion-refresher-content 
+        pullingIcon="arrow-down-outline" 
+        pullingText="Pull to refresh" 
+        refreshingSpinner="crescent"
+        refreshingText="Refreshing...">
+      </ion-refresher-content>
+    </ion-refresher>
     <ion-row class="ion-justify-content-between class-list">
       <ion-col>
         <h1 class="class-title"><strong> Classes </strong></h1>
@@ -76,14 +85,14 @@
 </template>
 
 <script >
-import { IonPage,IonList,IonItem,IonLabel,IonButton,IonIcon,IonBadge,IonSelect,IonSelectOption,IonCol,IonRow,IonSkeletonText,IonText} from '@ionic/vue';
+import { IonPage,IonList,IonItem,IonLabel,IonButton,IonIcon,IonBadge,IonSelect,IonSelectOption,IonCol,IonRow,IonSkeletonText,IonText,IonRefresher,IonRefresherContent} from '@ionic/vue';
 import { people } from 'ionicons/icons';
 import moment from 'moment';
 
 export default  {
   name: 'ClassDetails',
   components: { 
-    IonPage,IonList,IonItem,IonLabel,IonButton,IonIcon,IonBadge,IonSelect,IonSelectOption,IonCol,IonRow,IonSkeletonText,IonText,
+    IonPage,IonList,IonItem,IonLabel,IonButton,IonIcon,IonBadge,IonSelect,IonSelectOption,IonCol,IonRow,IonSkeletonText,IonText,IonRefresher,IonRefresherContent
   },
   data : () => ({
     people,
@@ -126,7 +135,7 @@ export default  {
     }
   },
   methods : {
-    initialize(){
+    initialize($event = null){
       this.getting_classes = true
       let params = {
         subject_key: this.selected_subject == "All" ? null : this.selected_subject,
@@ -135,6 +144,9 @@ export default  {
       
       this.$axios.get('teacher/v1/class-details',{params}).then(({data}) => {
         this.class_details = data
+        if($event){
+          $event.target.complete();
+        }
         this.getting_classes = false
       })
     },
