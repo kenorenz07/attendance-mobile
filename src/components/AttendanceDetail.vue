@@ -1,28 +1,41 @@
 <template>
   <ion-page>
     <div class="alert-head sc-ion-alert-md">
-        <h2 id="alert-2-hdr" class="alert-title sc-ion-alert-md">Student Assigning</h2>
+        <h2 id="alert-2-hdr" class="alert-title sc-ion-alert-md">{{class_student.student.display_name}}</h2>
     </div>
     <ion-row class="ion-justify-content-around">
         <ion-col size=4 >
             <span class="stat-label"> Present </span>
             <div class="statistic-card">
-                <span> 4</span>
+                <span> {{class_student.statistics.present}}</span>
             </div> 
         </ion-col>
         <ion-col size=4 >
             <span class="stat-label"> Absent </span>
             <div class="statistic-card">
-                <span> 4</span>
+                <span> {{class_student.statistics.absent}}</span>
             </div> 
             </ion-col>
         <ion-col size=4 >
             <span class="stat-label"> Late </span>
             <div class="statistic-card">
-                <span> 4</span>
+                <span> {{class_student.statistics.late}}</span>
             </div> 
         </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col size=12> 
+        <ion-text color="primary">
+          <ion-label>Time in : {{time_moment(class_student.attendance.time_in)}}</ion-label>
+        </ion-text>
+      </ion-col>
+      <ion-col size=12> 
+         <ion-text color="primary">
+          <ion-label>Time out : {{time_moment(class_student.attendance.time_out)}}</ion-label>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row></ion-row>
   </ion-page>
 </template>
 
@@ -38,7 +51,7 @@ export default {
       IonRow,IonCol,IonPage,
   },
   props: {
-    class_id : {
+    class_student : {
       default: null,
       required: true
     }
@@ -117,7 +130,7 @@ ion-modal.class-attendance-modal {
     overflow: hidden;
     max-width: 280px;
     width: 80vw;
-    height: 32vh;
+    height: 33vh;
     top: 0;
     bottom: 0;
     left: 0;
@@ -131,8 +144,8 @@ ion-modal.class-attendance-modal {
     }
     .alert-head {
         background: var(--ion-color-primary);
-        margin-bottom : 12px;
-        height: 60px;
+        // margin-bottom : 12px;
+        height: 70px;
 
         padding-left: unset;
         padding-right: unset;
@@ -149,7 +162,7 @@ ion-modal.class-attendance-modal {
             text-align: center;
             color : var(--ion-color-light);
             margin: 0;
-            font-size: 20px;
+            font-size: 16px;
         }
 
             
