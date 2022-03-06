@@ -1,6 +1,5 @@
 <template>
     <ion-page class="pages">
-        <ion-content scroll-y="false">
         <ion-row class="my-account-header">
             <ion-col size=12> 
                 <ion-button class="back-button" @click="$router.back()">
@@ -15,7 +14,7 @@
             </ion-col>
         </ion-row>
         <ion-row>
-            <ion-col size=6>
+            <ion-col size=5>
                 <ion-avatar>
                     <ion-img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"></ion-img>
                 </ion-avatar>
@@ -66,13 +65,16 @@
                 </ion-list>
             </ion-col>
         </ion-row>
-        </ion-content>
     </ion-page>
 </template>
 <script>
 import { caretBackOutline, pencil, person } from 'ionicons/icons';
+import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonItem,IonLabel,IonAvatar,IonImg,IonList,IonInput} from '@ionic/vue';
 
 export default {
+    components : {
+        IonPage,IonRow,IonCol,IonButton,IonIcon,IonItem,IonLabel,IonAvatar,IonImg,IonList,IonInput
+    },
     setup() {
         
     },
@@ -83,8 +85,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .my-account-header{
-        margin-top :50px;
-    }
+    margin-top :50px;
+}
 .input-field {
     display: flex;
     width: 100%;

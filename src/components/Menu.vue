@@ -27,14 +27,14 @@
 </template>
 <script>
 import {
-  IonMenu,menuController
+  IonMenu,IonContent,IonList,IonItem,IonIcon,IonLabel,IonButton,IonRow,IonCol,IonAvatar,IonImg, menuController
 } from "@ionic/vue";
 // import { Camera, CameraResultType,CameraSource} from '@capacitor/camera';
 import { closeOutline,logOutOutline,createOutline,create, person } from 'ionicons/icons';
 
 export default {
   components: {
-    IonMenu,
+    IonMenu,IonContent,IonList,IonItem,IonIcon,IonLabel,IonButton,IonRow,IonCol,IonAvatar,IonImg, 
   },
   data: () => ({
       closeOutline,
