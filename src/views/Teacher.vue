@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header collapse="condense" class="ion-no-border" mode="ios">
+    <ion-header class="ion-no-border" mode="ios">
       <ion-toolbar>
         <ion-button  slot="start" fill="clear" @click="openMenu()">
           <ion-avatar>
