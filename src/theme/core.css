@@ -26,6 +26,13 @@
 .subject-sched {
     padding-top: 5px;
 }
+.text-right {
+    text-align: right;
+}
+.notification-created {
+    font-size: 12px!important;
+    margin-top: 0!important;
+}
 .back-button {
     height: 54px;
 }

@@ -55,7 +55,7 @@ export default {
         user: {
             username : 'teacher_123', // teacher
             // username : 'student_123', // student
-            password : 123123
+            password : 123123123
         }
     }),
     methods : {
@@ -142,7 +142,7 @@ ion-button {
 }
 .loading-spinner {
     margin-top: 13px;
-    margin-left: 21px;
+    /* margin-left: 21px; */
 }
 .login-input {
     border: 1px solid #CFCFCF;

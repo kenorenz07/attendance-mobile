@@ -1,5 +1,13 @@
 <template>
     <ion-page class="pages">
+         <ion-refresher slot="fixed" @ionRefresh="initialize($event)" >
+            <ion-refresher-content 
+                pullingIcon="arrow-down-outline" 
+                pullingText="Pull to refresh" 
+                refreshingSpinner="crescent"
+                refreshingText="Refreshing...">
+            </ion-refresher-content>
+        </ion-refresher>
         <ion-row class="notification-details">
             <ion-col size=12> 
                  <ion-button class="back-button" @click="$router.back()">
@@ -11,17 +19,24 @@
             </ion-col>
         </ion-row>
         <ion-list>
-            <div v-if="true">
-                <ion-item class="notification-list-item" :class="class_detail% 2 ? 'notification-not-read':'notification-read'"  v-for="class_detail in 9" :key="class_detail">
+            <div v-if="!getting_notifications">
+                <ion-item class="notification-list-item" :class="checkIfToday(notification.created_at) ? 'notification-not-read':'notification-read'"  v-for="notification in notifications" :key="notification.id">
                     <ion-label>
-                        <ion-text :color="class_detail% 2 ? 'light':'primary'">
-                            <h2 class="subject-text subject-title" >LATE</h2>
-                        </ion-text>
-                        <ion-text :color="class_detail% 2 ? 'light':'dark'">
-                            <h3 class="subject-text">Differential Equations</h3>
-                            <p class="subject-sched">Su 12:01 am to 01:30 am</p>
+                            <ion-row class="ion-no-padding">
+                                
+                                <ion-col class="ion-no-padding"><ion-text :color="checkIfToday(notification.created_at) ? 'light':'primary'"><h2 class="subject-text subject-title" >{{notification.name}}</h2></ion-text></ion-col>
+                                <ion-col class="ion-no-padding"><ion-text :color="checkIfToday(notification.created_at) ? 'light':'primary'"><p class="notification-created text-right">({{humanRead(notification.created_at)}})</p>  </ion-text></ion-col>
+                                
+                            </ion-row>
+                            
+                        <ion-text :color="checkIfToday(notification.created_at)? 'light':'dark'">
+                            <h3 class="subject-text">{{notification.class_detail.subject.name}}</h3>
+                            <p class="subject-sched">{{abbrDay(notification.class_detail.schedule.day)}} {{time_moment(notification.class_detail.schedule.time_start)}} to {{time_moment(notification.class_detail.schedule.time_end)}}</p>
                         </ion-text>
                     </ion-label>
+                    <!-- <ion-text :color="checkIfToday(notification.created_at)? 'light':'dark'">
+                        <p class="notification-created text-right">{{humanRead(notification.created_at)}}</p>
+                    </ion-text> -->
                 </ion-item>
             </div>
             <div v-else>
@@ -44,12 +59,12 @@
 </template>
 
 <script>
-import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonSkeletonText,IonItem,IonList} from '@ionic/vue';
+import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonSkeletonText,IonItem,IonList,IonRefresher,IonRefresherContent} from '@ionic/vue';
 import {  caretBackOutline,addCircleOutline,pencilOutline,trashOutline} from 'ionicons/icons';
 
 export default {
     components : {
-        IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonSkeletonText,IonItem,IonList,
+        IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonSkeletonText,IonItem,IonList,IonRefresher,IonRefresherContent
     },
     data : () => ({
         caretBackOutline,addCircleOutline,pencilOutline,trashOutline,
@@ -73,11 +88,15 @@ export default {
     watch : {
     },
     methods : {
-        initialize(){
+        initialize($event = null){
             this.getting_notifications = true
-            this.$axios.get('teacher/v1/notifications/').then(({data}) => {
+            this.$axios.get('teacher/v1/notifications').then(({data}) => {
                 this.notifications = data
                 this.getting_notifications = false
+
+                if($event){
+                    $event.target.complete();
+                }
             })
 
         },

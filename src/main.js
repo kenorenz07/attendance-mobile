@@ -2,6 +2,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 import axios from './axios';
+import store from './store';
+
 import ToastNotify from './mixins/ToastNotify.vue';
 import Moment from './mixins/Moment.vue';
 import Abbreviation from './mixins/Abbreviation.vue';
@@ -52,7 +54,8 @@ const app = createApp(App)
     // animated: true,
     // navAnimation: myAnimation
   })
-  .use(router);
+  .use(router)  
+  .use(store);
   
 app.mixin(ToastNotify);
 app.mixin(Moment);

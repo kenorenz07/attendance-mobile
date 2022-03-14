@@ -40,8 +40,8 @@
                 </ion-label>
             </ion-col>
             <ion-col size=3>
-                <ion-thumbnail>
-                    <img src="/assets/img/qr_code.png" />
+                <ion-thumbnail @click="downloadAttendance">
+                    <img src="/assets/img/download.png" />
                 </ion-thumbnail>
             </ion-col>
 
@@ -171,6 +171,19 @@ export default {
 
             })
 
+        },
+        downloadAttendance(){
+            this.$axios.get('teacher/v1/generate-attendance-attendance/'+this.$route.params.id,{
+                responseType: 'arraybuffer'
+            })
+            .then(response => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'Class#'+this.$route.params.id+'_AttendanceSummary'+'.pdf');
+                document.body.appendChild(link);
+                link.click();
+            })
         },
         getAttendances(){
             this.getting_attendance = true

@@ -15,8 +15,17 @@ export default {
             }
             return false;
         },
+        checkIfToday(date){
+            let created = moment(date)
+            let today = moment()
+            // console.log(created,today,created.isSame(today, 'day'))
+            return created.isSame(today, 'day');
+        },
         dateFromDay(day = null){
             return day != "All" ? moment().day(day).format('MM/DD/YYYY') : moment().format('MM/DD/YYYY')
+        },
+        humanRead(date){
+            return moment(date).format("MMMM Do YYYY, h:mm a")
         }
     }
 }
