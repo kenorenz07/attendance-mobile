@@ -24,12 +24,12 @@
         </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size=12> 
+      <ion-col size=12 class="ion-no-padding"> 
         <ion-text color="primary">
           <ion-label>Time in : {{time_moment(class_student.attendance.time_in)}}</ion-label>
         </ion-text>
       </ion-col>
-      <ion-col size=12> 
+      <ion-col size=12 class="ion-no-padding"> 
          <ion-text color="primary">
           <ion-label>Time out : {{time_moment(class_student.attendance.time_out)}}</ion-label>
         </ion-text>

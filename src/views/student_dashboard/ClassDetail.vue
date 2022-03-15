@@ -18,7 +18,10 @@
                         <h3 class="subject-text">{{class_detail.room.name}}</h3>
                     </ion-text>
                     <ion-text >
-                        <p class="subject-sched">{{abbrDay(class_detail.schedule.day)}} {{time_moment(class_detail.schedule.time_start)}} to {{time_moment(class_detail.schedule.time_end)}}</p>
+                        <h3 class="subject-text">{{class_detail.teacher.full_name}}</h3>
+                    </ion-text>
+                    <ion-text >
+                        <p >{{abbrDay(class_detail.schedule.day)}} {{time_moment(class_detail.schedule.time_start)}} to {{time_moment(class_detail.schedule.time_end)}}</p>
                     </ion-text>
                 </ion-label>
                  <ion-label v-else>
@@ -32,19 +35,45 @@
                             <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
                         </h3>
                     </ion-text>
+                    <ion-text color="secondary">
+                        <h3 class="subject-text">
+                            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+                        </h3>
+                    </ion-text>
                     <ion-text >
-                        <p class="subject-sched">
+                        <p >
                             <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>     
                         </p>
                     </ion-text>
                 </ion-label>
             </ion-col>
             <ion-col size=3>
-                <ion-thumbnail @click="downloadAttendance">
-                    <img src="/assets/img/download.png" />
+                <ion-thumbnail>
+                    <img :src=" '/assets/img/person-icon.png'" />
                 </ion-thumbnail>
             </ion-col>
-
+            <ion-col size=12 class="statistics">
+                <ion-row class="ion-justify-content-around">
+                    <ion-col size=4 >
+                        <span class="stat-label"> Present </span>
+                        <div class="statistic-card">
+                            <span> {{class_detail.statistics.present}}</span>
+                        </div> 
+                    </ion-col>
+                    <ion-col size=4 >
+                        <span class="stat-label"> Absent </span>
+                        <div class="statistic-card">
+                            <span> {{class_detail.statistics.absent}}</span>
+                        </div> 
+                        </ion-col>
+                    <ion-col size=4 >
+                        <span class="stat-label"> Late </span>
+                        <div class="statistic-card">
+                            <span> {{class_detail.statistics.late}}</span>
+                        </div> 
+                    </ion-col>
+                </ion-row>
+            </ion-col>
             <ion-col size=12 class="ion-margin-top">
                 <ion-row>
                     <!-- <ion-col size=6 class="grid-no-padding">
@@ -58,11 +87,6 @@
                             <h2 class="attendance-text"><strong> Attendance </strong></h2>
                         </ion-label>
                     </ion-col>
-                    <ion-col size=6 >
-                        <ion-select :interface-options="select_options" :selected-text="selected_day" :value="selected_day" @ionChange="selected_day = $event.target.value" interface="popover" class="selection-filter">
-                            <ion-select-option v-for="day in days" :key="day" :value="day">{{day}}</ion-select-option>
-                        </ion-select>
-                    </ion-col>
                 </ion-row>
             </ion-col>
         </ion-row>
@@ -71,15 +95,9 @@
                 <ion-item v-for="student_attendance in attendances" :key="student_attendance.id" class="attendance-detail">
                     <ion-grid class="ion-no-padding">
                             <ion-row class="ion-justify-content-around">
-                                <ion-col size=4 class="ion-no-padding"><ion-label class="student-name">{{student_attendance.student.display_name_mobile}}</ion-label></ion-col>
-                                <ion-col size=4 class="ion-no-padding ion-text-center"><ion-label class="attendance-status" :color="checkColorForRemark(student_attendance.attendance.remarks)">{{checkRemarkValue(student_attendance.attendance.remarks)}}</ion-label></ion-col>
-                                <ion-col size=4 class="ion-no-padding">
-                                    <ion-row class="ion-no-padding ion-justify-content-end">
-                                        <ion-col size=4 class="ion-no-padding">
-                                            <ion-img src="/assets/img/eye_btn.png" @click="seeAttendanceDetails(student_attendance)" class="action-btn"></ion-img>
-                                        </ion-col>
-                                    </ion-row>
-                                </ion-col>
+                                <ion-col size=4 class="ion-no-padding"><ion-label class="student-name">{{dateSlash(student_attendance.date_of_attendance)}}</ion-label></ion-col>
+                                <ion-col size=4 class="ion-no-padding ion-text-center"><ion-label class="attendance-status" >{{time_moment(student_attendance.time_in)}}</ion-label></ion-col>
+                                <ion-col size=4 class="ion-no-padding ion-text-center"><ion-label class="attendance-status" :color="checkColorForRemark(student_attendance.remarks)">{{checkRemarkValue(student_attendance.remarks)}}</ion-label></ion-col>
                             </ion-row>
                     </ion-grid>
                 </ion-item>
@@ -115,18 +133,20 @@
 </template>
 
 <script>
-import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonSelect,IonSelectOption,IonImg,IonGrid,IonItem,IonList,modalController} from '@ionic/vue';
+import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonImg,IonGrid,IonItem,IonList} from '@ionic/vue';
 import {  caretBackOutline,addCircleOutline,pencilOutline,trashOutline} from 'ionicons/icons';
 // import ClassDetail from '@/components/ClassDetail.vue'
-import AttendanceDetail from '@/components/AttendanceDetail.vue'
+// import AttendanceDetail from '@/components/AttendanceDetail.vue'
 
 export default {
     components : {
-        IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonSelect,IonSelectOption,IonImg,IonGrid,IonItem,IonList,
+        IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonImg,IonGrid,IonItem,IonList,
     },
     data : () => ({
         caretBackOutline,addCircleOutline,pencilOutline,trashOutline,
-        class_detail : {},
+        class_detail : {
+            statistics :{absent: 0, present: 0, late: 0, excused: 0}
+        },
         getting_class : true,
         days : [],
         selected_day : '',
@@ -156,41 +176,19 @@ export default {
         initialize(){
             this.getting_class = true
             this.getting_attendance = true
-            this.$axios.get('teacher/v1/class-detail/'+this.$route.params.id).then(({data}) => {
+            this.$axios.get('student/v1/class-detail/'+this.$route.params.id).then(({data}) => {
                 this.class_detail = data
+                // console.log(this.class_detail.statistics)
                 this.getting_class = false
-                this.getDaysFilter()
-            })
-
-        },
-        getDaysFilter(){
-            this.$axios.get('teacher/v1/class-detail/'+this.$route.params.id+'/get-days-filter').then(({data}) => {
-                this.days = data
-                this.selected_day = this.dateFromDay(this.class_detail.schedule.day.toUpperCase())
                 this.getAttendances()
-
             })
 
-        },
-        downloadAttendance(){
-            this.$axios.get('teacher/v1/generate-attendance-attendance/'+this.$route.params.id,{
-                responseType: 'arraybuffer'
-            })
-            .then(response => {
-                const url = window.URL.createObjectURL(new Blob([response.data]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', 'Class#'+this.$route.params.id+'_AttendanceSummary'+'.pdf');
-                document.body.appendChild(link);
-                link.click();
-            })
         },
         getAttendances(){
             this.getting_attendance = true
             let params = {
-                date_filter : this.selected_day
             }
-            this.$axios.get('teacher/v1/class-detail/'+this.$route.params.id+'/get-attendances',{params}).then(({data}) => {
+            this.$axios.get('student/v1/class-detail/'+this.$route.params.id+'/get-attendances',{params}).then(({data}) => {
                 this.attendances = data
                 this.getting_attendance = false
             })
@@ -224,108 +222,41 @@ export default {
                     break;
             }
         },
-        async seeAttendanceDetails(class_student){
-            const modal = await modalController.create({
-                component: AttendanceDetail, 
-                componentProps: {
-                    class_student : class_student
-                },
-                cssClass: "class-attendance-modal"
-            });
-            return modal.present();
-        }
-        // async removeStudentFromClass(student_attendance) {
-        //     const alert = await alertController.create({
-        //         cssClass: 'remove-student-alert',
-        //         mode: "md",
-        //         header: 'Confirm Remove',
-        //         message: `Do you want to remove student ${student_attendance.student.full_name} ?`,
-        //             buttons: [
-        //             {
-        //                 text: 'Yes',
-        //                 role: 'yes',
-        //                 handler: () => {
-        //                     this.$axios.delete(`teacher/v1/class-detail/student/${student_attendance.id}/remove-student`).then(({data}) => {
-        //                         data
-        //                         this.getAttendances()
-        //                     })
-        //                 },
-        //             },
-        //             {
-        //                 text: 'No',
-        //                 handler: () => {
-        //                     // alert.dismiss();
-        //                 },
-        //             },
-        //         ],
-        //     });
-        //     return alert.present();
-        // },
-        // async updateStatusForStudentAttendance(student_attendance) {
-        //     const alert = await alertController.create({
-        //         cssClass: 'update-student-attendance-remark-alert ',
-        //         header: 'Update Status',
-        //         mode: "md",
-        //         message: `Update attendance remark for ${student_attendance.student.full_name} ?`,
-        //             buttons: [
-        //             {
-        //                 text: 'Present',
-        //                 handler: () => {
-        //                     this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 1}).then(({data}) => {
-        //                         data
-        //                         this.getAttendances()
-        //                     })
-        //                 },
-        //             },
-        //             {
-        //                 text: 'Late',
-        //                 handler: () => {
-        //                     this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 2}).then(({data}) => {
-        //                         data
-        //                         this.getAttendances()
-        //                     })
-        //                 },
-        //             },
-        //               {
-        //                 text: 'Excuse',
-        //                 handler: () => {
-        //                     this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 3}).then(({data}) => {
-        //                         data
-        //                         this.getAttendances()
-        //                     })
-        //                 },
-        //             },
-        //             {
-        //                 text: 'Absent',
-        //                 handler: () => {
-        //                     this.$axios.put(`teacher/v1/class-detial/update-attendance/${student_attendance.attendance.id}`,{remark : 0}).then(({data}) => {
-        //                         data
-        //                         this.getAttendances()
-        //                     })
-        //                     alert.dismiss();
-        //                 },
-        //             },
-        //         ],
-        //     });
-        //     return alert.present();
-        // },
-        // async addStudentModal(){
-        //     console.log('sgs')
-        //     const modal = await modalController.create({
-        //         component: ClassDetail, 
-        //         componentProps: {
-        //             class_id : this.$route.params.id
-        //         },
-        //         cssClass: "add-student-modal"
-        //     });
-        //     return modal.present();
-        // }
-
     }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+    .subject-text {
+        padding-top: 1px;
+    }
+    ion-col.statistics {
+        text-align: center;
+        
+        .stat-label {
+            color: var(--ion-color-dark);
+            font-size: 12px;
+            font-weight: bold;
+        }
+    }
+    
+    .statistic-card {
+        height : 75px;
+        width: 75px;
+        margin-left: auto;
+        margin-right: auto;
+        background: var(--ion-color-light);
+        color : var(--ion-color-secondary);
+        border-radius: 5px;
+        margin-top: 5px;
+
+        span {
+            margin: auto;
+            line-height: 75px;
+            font-size: 35px;
+            font-weight: bold;
+        }
+    }
     .date-of-day {
         margin-bottom : 10px;
         margin-top: 21px;
@@ -364,7 +295,7 @@ export default {
         filter: brightness(44%);
     }
     ion-list {
-        height: 45%;
+        height: 25%;
         overflow: hidden;
         overflow-y: scroll;
     }

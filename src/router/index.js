@@ -23,7 +23,7 @@ const routes = [{
             {
                 path: 'class-details',
                 component: () =>
-                    import ('@/views/teacher_dashboard/ClassList.vue')
+                    import ('@/views/ClassList.vue')
             },
             {
                 path: 'class-detail/:id',
@@ -33,7 +33,7 @@ const routes = [{
             {
                 path: 'notifications/',
                 component: () =>
-                    import ('@/views/teacher_dashboard/Notifications.vue')
+                    import ('@/views/Notifications.vue')
             },
             {
                 path: 'myaccount/',
@@ -60,18 +60,28 @@ const routes = [{
             {
                 path: 'class-details',
                 component: () =>
-                    import ('@/views/student_dashboard/ClassDetails.vue')
+                    import ('@/views/ClassList.vue')
             },
             {
-                path: 'tab2',
+                path: 'notifications/',
                 component: () =>
-                    import ('@/views/student_dashboard/Tab2.vue')
+                    import ('@/views/Notifications.vue')
             },
             {
-                path: 'tab3',
+                path: 'myaccount/',
                 component: () =>
-                    import ('@/views/student_dashboard/Tab3.vue')
-            }
+                    import ('@/views/Myaccount.vue')
+            },
+            {
+                path: 'reset-password/',
+                component: () =>
+                    import ('@/views/ResetPassword.vue')
+            },
+            {
+                path: 'class-detail/:id',
+                component: () =>
+                    import ('@/views/student_dashboard/ClassDetail.vue')
+            },
         ]
     },
     {

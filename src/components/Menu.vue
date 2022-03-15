@@ -7,8 +7,8 @@
                 <ion-avatar><ion-img :src="$store.getters.user.image_path ? $store.getters.user.image_path : '/assets/img/person-icon.png'"></ion-img></ion-avatar>
               </ion-col>
               <ion-col>
-                <h3>{{$store.getters.user.full_name}}</h3>
-                <p>Professor</p>
+                <h3>{{$store.getters.user.display_name_mobile}}</h3>
+                <p>{{user_type}}</p>
                 <p>#{{$store.getters.user.id}}</p>
               </ion-col>
             </ion-row>
@@ -52,6 +52,11 @@ export default {
       person,eye,bookmarks
       // user : this.$store.getters.user
   }),
+  computed : {
+    user_type () {
+      return localStorage.getItem('user_type') == 'student' ? 'Student' : 'Teacher'
+    }
+  },
   methods:{
     openMyAccount(){
       this.$router.push(`/${localStorage.getItem('user_type')}/myaccount`);
@@ -87,7 +92,7 @@ export default {
       border-bottom-left-radius: 12px;
       border-bottom-right-radius: 12px;
       //added
-      padding: 5px 30px;
+      padding: 25px 30px;
     }
     .header ion-row {
       justify-content: center;

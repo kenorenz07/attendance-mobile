@@ -4,7 +4,7 @@
       <ion-toolbar>
         <ion-button  slot="start" fill="clear" @click="openMenu()">
           <ion-avatar>
-            <img src="https://www.simplelyst.com/_image-uploads/profile_photo-agents-agent-2-87173.jpg" />
+            <img :src="$store.getters.user.image_path ? $store.getters.user.image_path : '/assets/img/person-icon.png'" />
           </ion-avatar>
         </ion-button>
         <ion-title>
@@ -12,7 +12,7 @@
         </ion-title>
         <ion-button  slot="end" fill="clear" class="notification-btn" @click="$router.push('/teacher/notifications')">
           <ion-icon size="large"  :icon="notifications"></ion-icon>
-          <ion-badge slot="start" color="danger">2</ion-badge>
+          <ion-badge slot="start" color="danger">{{notification_count}}</ion-badge>
         </ion-button>
       </ion-toolbar>
     </ion-header>
@@ -53,7 +53,24 @@ export default {
       book,notifications
     }
   },
+  data:()=>({
+    notification_count : 0,
+  }),
+  watch : {
+    '$route' : {
+      
+      handler(){
+        this.countNotifications()
+      },
+      immediate: true
+    }
+  },
   methods : {
+    countNotifications(){
+      this.$axios.get(`teacher/v1/notifications-today`).then(({data}) => {
+        this.notification_count = data
+      })
+    },
     openMenu(){
       menuController.open();
     },

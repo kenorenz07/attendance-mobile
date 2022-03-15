@@ -26,6 +26,9 @@ export default {
         },
         humanRead(date){
             return moment(date).format("MMMM Do YYYY, h:mm a")
+        },
+        dateSlash(date){
+            return moment(date).format('MM/DD/YYYY')
         }
     }
 }

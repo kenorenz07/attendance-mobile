@@ -11,6 +11,13 @@
     --color-checked: var(--ion-color-secondary) !important;
 }
 
+.attendance-detail {
+  --background: var(--ion-color-light);
+  --border-radius: 5px;
+  --border-color: var(--ion-color-light);
+    margin-bottom: 10px;
+    --min-height :50px;
+}
 
 .class-list-item {
     --min-height :100px;

@@ -90,7 +90,7 @@ export default {
     methods : {
         initialize($event = null){
             this.getting_notifications = true
-            this.$axios.get('teacher/v1/notifications').then(({data}) => {
+            this.$axios.get(`${localStorage.getItem('user_type')}/v1/notifications`).then(({data}) => {
                 this.notifications = data
                 this.getting_notifications = false
 

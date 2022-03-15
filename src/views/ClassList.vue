@@ -1,5 +1,4 @@
 <template>
-
   <ion-page class="pages">
     <ion-refresher slot="fixed" @ionRefresh="initialize($event)" >
       <ion-refresher-content 
@@ -118,9 +117,9 @@ export default  {
     this.getSubjects()
   },
   mounted (){
-    this.selected_day = this.days[moment().day()]
-    this.initialize()
-    this.getSubjects()
+    // this.selected_day = this.days[moment().day()]
+    // this.initialize()
+    // this.getSubjects()
   },
   watch : {
     selected_subject : {
@@ -142,7 +141,7 @@ export default  {
         day : this.selected_day == "All" ? null : this.selected_day
       }
       
-      this.$axios.get('teacher/v1/class-details',{params}).then(({data}) => {
+      this.$axios.get(`${localStorage.getItem('user_type')}/v1/class-details`,{params}).then(({data}) => {
         this.class_details = data
         if($event){
           $event.target.complete();
@@ -151,12 +150,12 @@ export default  {
       })
     },
     getSubjects(){
-      this.$axios.get('teacher/v1/subjects').then(({data}) => {
+      this.$axios.get(`${localStorage.getItem('user_type')}/v1/subjects`).then(({data}) => {
         this.subjects.push(...data)
       })
     },
     viewClassDetail(class_detail){
-      this.$router.push('/teacher/class-detail/'+class_detail.id)
+      this.$router.push(`/${localStorage.getItem('user_type')}/class-detail/`+class_detail.id)
   
     },
   }
