@@ -1,5 +1,5 @@
-<template>
-  <ion-menu side="start" type="overlay" content-id="main-content">
+.<template>
+  <ion-menu side="start" type="overlay" content-id="main-content" v-if="$store.getters.user.id">
     <ion-content scroll-y="false">
         <div class="header">
             <ion-row>

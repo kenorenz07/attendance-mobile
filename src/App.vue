@@ -1,6 +1,6 @@
 <template>
   <ion-app>
-    <Menu></Menu>
+    <Menu v-if="$store.getters.user.id"></Menu>
     
     <ion-router-outlet id="main-content"/>
   </ion-app>

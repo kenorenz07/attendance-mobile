@@ -5,7 +5,9 @@ import axios from '../axios'
 
 const store = createStore({
     state: () => ({
-        user: {},
+        user: {
+            id:null
+        },
     }),
     getters : {
         user(state) {
@@ -25,7 +27,7 @@ const store = createStore({
                 return response.data
             }
           } catch (error) {
-            commit('SET_USER', null)
+            commit('SET_USER', {id:null})
             localStorage.removeItem("token");
             localStorage.removeItem("user_type");
           }
