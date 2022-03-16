@@ -4,7 +4,7 @@
         <div class="header">
             <ion-row>
               <ion-col>
-                <ion-avatar><ion-img :src="$store.getters.user.image_path ? $store.getters.user.image_path : '/assets/img/person-icon.png'"></ion-img></ion-avatar>
+                <ion-avatar><ion-img :src="$store.getters.user.image_path ? 'http://3.129.43.86'+ $store.getters.user.image_path : '/assets/img/person-icon.png'"></ion-img></ion-avatar>
               </ion-col>
               <ion-col>
                 <h3>{{$store.getters.user.display_name_mobile}}</h3>

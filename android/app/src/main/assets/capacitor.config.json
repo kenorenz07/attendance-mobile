@@ -1,0 +1,13 @@
+{
+	"appId": "nwssu.attendance.app",
+	"appName": "Attendance App",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "dist",
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 0
+		}
+	},
+	"cordova": {}
+}

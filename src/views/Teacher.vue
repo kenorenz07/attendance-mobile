@@ -4,7 +4,7 @@
       <ion-toolbar>
         <ion-button  slot="start" fill="clear" @click="openMenu()">
           <ion-avatar>
-            <img :src="$store.getters.user.image_path ? $store.getters.user.image_path : '/assets/img/person-icon.png'" />
+            <img :src="$store.getters.user.image_path ?'http://3.129.43.86'+ $store.getters.user.image_path : '/assets/img/person-icon.png'" />
           </ion-avatar>
         </ion-button>
         <ion-title>

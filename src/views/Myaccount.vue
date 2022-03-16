@@ -16,7 +16,7 @@
         <ion-row>
             <ion-col size=5>
                 <ion-avatar>
-                    <ion-img :src="user.image ? user.image : ($store.getters.user.image_path ? $store.getters.user.image_path :'/assets/img/person-icon.png')"></ion-img>
+                    <ion-img :src="user.image ? user.image : ($store.getters.user.image_path ? 'http://3.129.43.86'+ $store.getters.user.image_path :'/assets/img/person-icon.png')"></ion-img>
                 </ion-avatar>
             </ion-col>
             <ion-col size=6>
@@ -100,6 +100,7 @@ export default {
         saveCredentials(){
             this.$axios.post(`${localStorage.getItem('user_type')}/v1/update`,this.user).then(({data}) => {
                 data
+                this.$store.dispatch('updateUser')
             })
         }
     },
