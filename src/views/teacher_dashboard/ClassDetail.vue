@@ -119,6 +119,8 @@ import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,Io
 import {  caretBackOutline,addCircleOutline,pencilOutline,trashOutline} from 'ionicons/icons';
 // import ClassDetail from '@/components/ClassDetail.vue'
 import AttendanceDetail from '@/components/AttendanceDetail.vue'
+import {File} from "@ionic-native/file";
+import {FileOpener} from "@ionic-native/file-opener";
 
 export default {
     components : {
@@ -173,17 +175,37 @@ export default {
 
         },
         downloadAttendance(){
+            let file_name = 'Class#'+this.$route.params.id+'_AttendanceSummary'+'.pdf';
             this.$axios.get('teacher/v1/generate-attendance-attendance/'+this.$route.params.id,{
-                responseType: 'arraybuffer'
+                responseType: 'blob'
             })
-            .then(response => {
-                const url = window.URL.createObjectURL(new Blob([response.data]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', 'Class#'+this.$route.params.id+'_AttendanceSummary'+'.pdf');
-                document.body.appendChild(link);
-                link.click();
+            // .then(response => {
+            //     const url = window.URL.createObjectURL(new Blob([response.data]));
+            //     const link = document.createElement('a');
+            //     link.href = url;
+            //     link.setAttribute('download', file_name);
+            //     document.body.appendChild(link);
+            //     link.click();
+            // })
+            .then((response) => {
+                return File.writeFile(
+                    File.externalRootDirectory + "/Download",
+                    file_name,
+                    new Blob([response.data]),
+                    {
+                        replace: true,
+                    }
+                );
             })
+            .then(() => {
+                return FileOpener.open(
+                    File.externalRootDirectory + "/Download/" + file_name,
+                    "application/pdf"
+                );
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         },
         getAttendances(){
             this.getting_attendance = true

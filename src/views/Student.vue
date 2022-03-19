@@ -59,14 +59,15 @@ export default {
   watch : {
     '$route' : {
       handler(){
-        this.countNotifications()
+        if(localStorage.getItem('user_type'))
+          this.countNotifications()
       },
       immediate: true
     }
   },
   methods : {
     countNotifications(){
-      this.$axios.get(`student/v1/notifications-today`).then(({data}) => {
+      this.$axios.get(`${localStorage.getItem('user_type')}/v1/notifications-today`).then(({data}) => {
         this.notification_count = data
       })
     },
