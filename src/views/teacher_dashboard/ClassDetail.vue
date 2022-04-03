@@ -119,9 +119,7 @@ import {IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,Io
 import {  caretBackOutline,addCircleOutline,pencilOutline,trashOutline} from 'ionicons/icons';
 // import ClassDetail from '@/components/ClassDetail.vue'
 import AttendanceDetail from '@/components/AttendanceDetail.vue'
-import {File} from "@ionic-native/file";
-import {FileOpener} from "@ionic-native/file-opener";
-
+import { Filesystem, Directory } from '@capacitor/filesystem';
 export default {
     components : {
         IonPage,IonRow,IonCol,IonButton,IonIcon,IonLabel,IonText,IonThumbnail,IonSkeletonText,IonSelect,IonSelectOption,IonImg,IonGrid,IonItem,IonList,
@@ -174,7 +172,15 @@ export default {
             })
 
         },
+        blobToBase64(blob) {
+            return new Promise((resolve, ) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+        },
         downloadAttendance(){
+            var vm = this;
             let file_name = 'Class#'+this.$route.params.id+'_AttendanceSummary'+'.pdf';
             this.$axios.get('teacher/v1/generate-attendance-attendance/'+this.$route.params.id,{
                 responseType: 'blob'
@@ -187,22 +193,29 @@ export default {
             //     document.body.appendChild(link);
             //     link.click();
             // })
-            .then((response) => {
-                return File.writeFile(
-                    File.externalRootDirectory + "/Download",
-                    file_name,
-                    new Blob([response.data]),
-                    {
-                        replace: true,
-                    }
-                );
+            .then(async function(response) {
+                let blob = new Blob([response.data], { type: 'application/pdf' })
+
+                var base64data = await vm.blobToBase64(blob);
+
+                try {
+                    console.log(base64data,'convert')
+                    Filesystem.writeFile({
+                        path: file_name,
+                        data: base64data,
+                        directory: Directory.Documents,
+                    });
+                    vm.successNotify("Downloaded file will be in Documents")
+                } catch (e) {
+                    console.error("Unable to write file", e);
+                }
             })
-            .then(() => {
-                return FileOpener.open(
-                    File.externalRootDirectory + "/Download/" + file_name,
-                    "application/pdf"
-                );
-            })
+            // .then(() => {
+            //     return FileOpener.open(
+            //         File.externalRootDirectory + "/Download/" + file_name,
+            //         "application/pdf"
+            //     );
+            // })
             .catch((error) => {
                 console.log(error);
             });

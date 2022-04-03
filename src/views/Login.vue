@@ -53,9 +53,9 @@ export default {
         show_pass: false,
         loading: false,
         user: {
-            username : 'teacher_123', // teacher
+            username : '', // teacher
             // username : 'student_123', // student
-            password : 123123123
+            password : ''
         }
     }),
     methods : {
