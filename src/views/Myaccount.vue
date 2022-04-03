@@ -96,6 +96,8 @@ export default {
             });
 
             this.user.image ="data:image/jpeg;base64," + image.base64String;
+
+            this.saveCredentials()
         },
         saveCredentials(){
             this.$axios.post(`${localStorage.getItem('user_type')}/v1/update`,this.user).then(({data}) => {
